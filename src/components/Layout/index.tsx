@@ -1,4 +1,4 @@
-import { Stack, Container, Box, Heading, Text } from "@chakra-ui/react"
+import { Stack, Container, Box, Heading, Text, Input, Button } from "@chakra-ui/react"
 import { ReactNode } from "react"
 
 interface Props {
@@ -19,6 +19,21 @@ const Layout: React.FC<Props> = ({ children, jumbotron }) => {
       </Box>
       <Box as="main">
         {children}
+      </Box>
+      <Box as="footer" bg="gray.900" p={5} color="white">
+        <Container maxW="container.lg">
+          <Stack isInline alignItems="center" mx="auto" w="full" maxW="container.md">
+            <Text>Receba atualizações sobre vagas semanalmente:</Text>
+            <Input 
+              size="sm"
+              maxW={300}
+              placeholder="Seu e-mail"
+            />
+            <Button size="sm" rounded="none" color="black">
+              Inscrever
+            </Button>
+          </Stack>
+        </Container>
       </Box>
     </>
   )
