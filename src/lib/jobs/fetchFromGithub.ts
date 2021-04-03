@@ -2,7 +2,7 @@ import axios from "axios"
 
 import { GITHUB_API_URL } from "config"
 
-interface FetchIssuesParams {
+interface FetchJobsParams {
   since: Date
   repo: string 
   org: string
@@ -20,7 +20,7 @@ interface RawIssue {
   }[]
 }
 
-interface ProcessedJob {
+export interface ProcessedJob {
   title: string 
   github_id: number 
   body: string
@@ -33,7 +33,7 @@ interface ProcessedJob {
   location: string
 }
 
-export async function fetchIssues({ since, org, repo }: FetchIssuesParams) {
+export async function fetchJobs({ since, org, repo }: FetchJobsParams) {
 	const url = GITHUB_API_URL + `/repos/${org}/${repo}/issues`
 	const response = await axios.get<RawIssue[]>(url, {
     params: {
@@ -70,8 +70,8 @@ function convertIssueToJob(issue: RawIssue): ProcessedJob | null {
       state: issue.state,
       open: issue.state === "open",
       title,
-      company: companyResult[1],
-      location: locationResult[1]
+      company: companyResult[1] || null,
+      location: locationResult[1] || null
     }
   } else {
     return null
