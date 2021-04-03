@@ -4,12 +4,12 @@ import { Heading } from "@chakra-ui/react"
 const Home: React.FC = () => {
   return (
     <>
-    <Head>
-      <title>Home | DevHunter</title>
-    </Head>
-    <Heading>
-      Welcome to DevHunter
-    </Heading>
+      <Head>
+        <title>Home | DevHunter</title>
+      </Head>
+      <Heading>
+        Welcome to DevHunter
+      </Heading>
     </>
   )
 }
