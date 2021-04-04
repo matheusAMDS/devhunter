@@ -17,6 +17,11 @@ const Layout: React.FC<Props> = ({ children, jumbotron }) => {
           {jumbotron}
         </Container>
       </Box>
+      <Box 
+        w="100%" 
+        bgGradient="linear(to-r,gray.400,yellow.400,pink.400, red.400, blue.400, green.400)" 
+        p={2}
+      />
       <Box as="main">
         {children}
       </Box>

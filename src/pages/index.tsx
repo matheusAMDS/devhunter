@@ -3,6 +3,7 @@ import { Box, Container, Divider, Heading, Stack, Tag, Text } from "@chakra-ui/r
 import { formatDistanceToNow } from "date-fns"
 import brLocale from "date-fns/locale/pt-BR"
 import { MdLocationCity } from "react-icons/md"
+import NextLink from "next/link"
 
 import Layout from "components/Layout"
 import { fetchJobs, ProcessedJob } from "lib/jobs/fetchFromGithub"
@@ -38,25 +39,27 @@ const Home: React.FC<Props> = ({ jobs }) => {
       </Head>
       <Container maxW="container.lg" py={5}>
         { jobs.map(job => (
-          <Box key={job.github_id} p={2} cursor="pointer" my={2}>
-            <Text color="gray.500">
-              {postedDate(String(job.updated_at))}
-            </Text>
-            <Heading mb={1}>{job.title}</Heading>
-            <Text as="p" fontSize={18} mb={1}>
-              Postada por <strong>{job.company}</strong>
-            </Text>
-            <Stack isInline alignItems="center">
-              <MdLocationCity />
-              <Text>{job.location}</Text>
-            </Stack>
-            <Box mt={3}>
-              {job.labels.map(label => (
-                <Tag mr={1} mb={1} key={label}>{label}</Tag>
-              ))}
+          <NextLink href="/jobs/[id]" as={`/jobs/${job.github_id}`} key={job.github_id}>
+            <Box p={2} cursor="pointer" my={2}>
+              <Text color="gray.500">
+                {postedDate(String(job.updated_at))}
+              </Text>
+              <Heading mb={1}>{job.title}</Heading>
+              <Text as="p" fontSize={18} mb={1}>
+                Postada por <strong>{job.company}</strong>
+              </Text>
+              <Stack isInline alignItems="center">
+                <MdLocationCity />
+                <Text>{job.location}</Text>
+              </Stack>
+              <Box mt={3}>
+                {job.labels.map(label => (
+                  <Tag mr={1} mb={1} key={label}>{label}</Tag>
+                ))}
+              </Box>
+              <Divider mt={5} />
             </Box>
-            <Divider mt={5} />
-          </Box>
+          </NextLink>
         ))}
       </Container>
     </Layout>
