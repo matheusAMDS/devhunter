@@ -42,6 +42,7 @@ export async function fetchJobs({ since, org, repo }: FetchJobsParams) {
   })
   
   const jobs = response.data
+    .filter(issue => new Date(issue.created_at).getTime() > since.getTime())
     .map(issue => convertIssueToJob(issue))
     .filter(issue => issue)
 

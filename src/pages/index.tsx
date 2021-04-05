@@ -39,7 +39,11 @@ const Home: React.FC<Props> = ({ jobs }) => {
       </Head>
       <Container maxW="container.lg" py={5}>
         { jobs.map(job => (
-          <NextLink href="/jobs/[id]" as={`/jobs/${job.github_id}`} key={job.github_id}>
+          <NextLink 
+            href="/jobs/[id]" 
+            as={`/jobs/${job.github_id}`} 
+            key={job.github_id}
+          >
             <Box p={2} cursor="pointer" my={2}>
               <Text color="gray.500">
                 {postedDate(String(job.updated_at))}
@@ -54,7 +58,15 @@ const Home: React.FC<Props> = ({ jobs }) => {
               </Stack>
               <Box mt={3}>
                 {job.labels.map(label => (
-                  <Tag mr={1} mb={1} key={label}>{label}</Tag>
+                  <Tag 
+                    mr={1} 
+                    mb={1} 
+                    key={label} 
+                    variant="solid" 
+                    colorScheme="green"
+                  >
+                    {label}
+                  </Tag>
                 ))}
               </Box>
               <Divider mt={5} />
