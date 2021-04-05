@@ -1,11 +1,9 @@
 import axios from "axios"
 
-import { GITHUB_API_URL } from "config"
+import { GITHUB_API_URL, GITHUB_JOB_REPOS } from "config"
 
 interface FetchJobsParams {
   since: Date
-  repo: string 
-  org: string
 }
 
 interface RawIssue {
@@ -33,15 +31,20 @@ export interface ProcessedJob {
   location: string
 }
 
-export async function fetchJobs({ since, org, repo }: FetchJobsParams) {
-	const url = GITHUB_API_URL + `/repos/${org}/${repo}/issues`
-	const response = await axios.get<RawIssue[]>(url, {
-    params: {
-      since
-    }
+export async function fetchJobs({ since }: FetchJobsParams) {
+  const calls = GITHUB_JOB_REPOS.map(({ org, repo }) => {
+    const url = GITHUB_API_URL + `/repos/${org}/${repo}/issues`
+
+    return axios.get<RawIssue[]>(url, {
+      params: {
+        since
+      }
+    })
   })
-  
-  const jobs = response.data
+
+  const response = await axios.all(calls)
+  const jobs = response
+    .reduce((prev, actual) => prev.concat(actual.data), [])
     .filter(issue => new Date(issue.created_at).getTime() > since.getTime())
     .map(issue => convertIssueToJob(issue))
     .filter(issue => issue)
@@ -54,6 +57,7 @@ function convertIssueToJob(issue: RawIssue): ProcessedJob | null {
   const locationRegex = RegExp(/\[(.+)\]\s/)
 
   const companyResult = issue.title.match(companyRegex)
+
   const locationResult = issue.title.match(locationRegex)
 
   if (companyResult && locationResult) {
@@ -71,7 +75,7 @@ function convertIssueToJob(issue: RawIssue): ProcessedJob | null {
       state: issue.state,
       open: issue.state === "open",
       title,
-      company: companyResult[1] || null,
+      company: companyResult[1] || companyResult[2] || companyResult[3] || null,
       location: locationResult[1] || null
     }
   } else {

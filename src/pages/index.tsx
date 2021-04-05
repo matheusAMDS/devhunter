@@ -81,8 +81,6 @@ const Home: React.FC<Props> = ({ jobs }) => {
 export const getServerSideProps: GetServerSideProps = async () => {
   const jobs = await fetchJobs({ 
     since: new Date("2021/04/02"),
-    org: "backend-br",
-    repo: "vagas"
   })
 
   return {

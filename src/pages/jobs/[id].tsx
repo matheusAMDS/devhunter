@@ -47,8 +47,6 @@ const JobDetails: React.FC<Props> = ({ job }) => {
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const jobs = await fetchJobs({ 
     since: new Date("2021/04/02"),
-    org: "backend-br",
-    repo: "vagas"
   })
   const job = jobs.find(job => job.github_id === Number(query.id))
 
