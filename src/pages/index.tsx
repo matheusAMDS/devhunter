@@ -6,15 +6,18 @@ import { MdLocationCity } from "react-icons/md"
 import NextLink from "next/link"
 
 import Layout from "components/Layout"
-import { fetchJobs, ProcessedJob } from "lib/jobs/fetchFromGithub"
 import { GetServerSideProps } from 'next'
+import indexJobs from 'lib/jobs/services/indexJobs'
+import { Job } from "lib/jobs/model"
 
 interface Props {
-  jobs: ProcessedJob[]
+  jobs: Job[],
+  hasNextPage: boolean,
+  nextPage: number
 }
 
-const Home: React.FC<Props> = ({ jobs }) => {
-  const postedDate = (date: string) => {
+const Home: React.FC<Props> = ({ jobs, hasNextPage, nextPage }) => {
+  const postedDate = (date: number) => {
     const distance = formatDistanceToNow(new Date(date), { 
       locale: brLocale,
       addSuffix: false
@@ -41,12 +44,12 @@ const Home: React.FC<Props> = ({ jobs }) => {
         { jobs.map(job => (
           <NextLink 
             href="/jobs/[id]" 
-            as={`/jobs/${job.github_id}`} 
-            key={job.github_id}
+            as={`/jobs/${job._id}`} 
+            key={String(job._id)}
           >
             <Box p={2} cursor="pointer" my={2}>
               <Text color="gray.500">
-                {postedDate(String(job.updated_at))}
+                {postedDate(job.updated_at)}
               </Text>
               <Heading mb={1}>{job.title}</Heading>
               <Text as="p" fontSize={18} mb={1}>
@@ -79,13 +82,12 @@ const Home: React.FC<Props> = ({ jobs }) => {
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const jobs = await fetchJobs({ 
-    since: new Date("2021/04/02"),
-  })
+  const data = await indexJobs({})
 
   return {
     props: {
-      jobs
+      ...data,
+      jobs: JSON.parse(JSON.stringify(data.jobs))
     }
   }
 }

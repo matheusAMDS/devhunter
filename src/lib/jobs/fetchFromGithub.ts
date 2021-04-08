@@ -3,7 +3,7 @@ import axios from "axios"
 import { GITHUB_API_URL, GITHUB_JOB_REPOS } from "config"
 
 interface FetchJobsParams {
-  since: Date
+  since?: number
 }
 
 interface RawIssue {
@@ -22,8 +22,8 @@ export interface ProcessedJob {
   title: string 
   github_id: number 
   body: string
-  created_at: Date 
-  updated_at: Date
+  created_at: number  
+  updated_at: number
   state: string 
   labels: string[]
   open: boolean 
@@ -37,7 +37,7 @@ export async function fetchJobs({ since }: FetchJobsParams) {
 
     return axios.get<RawIssue[]>(url, {
       params: {
-        since
+        since: new Date(since).toISOString()
       }
     })
   })
@@ -45,7 +45,7 @@ export async function fetchJobs({ since }: FetchJobsParams) {
   const response = await axios.all(calls)
   const jobs = response
     .reduce((prev, actual) => prev.concat(actual.data), [])
-    .filter(issue => new Date(issue.created_at).getTime() > since.getTime())
+    .filter(issue => !since || new Date(issue.created_at).getTime() > since)
     .map(issue => convertIssueToJob(issue))
     .filter(issue => issue)
 
@@ -59,7 +59,7 @@ function convertIssueToJob(issue: RawIssue): ProcessedJob | null {
   const companyResult = issue.title.match(companyRegex)
 
   const locationResult = issue.title.match(locationRegex)
-
+ 
   if (companyResult && locationResult) {
     const title = issue.title
       .replace(companyRegex, "")
@@ -70,8 +70,8 @@ function convertIssueToJob(issue: RawIssue): ProcessedJob | null {
       github_id: issue.id,
       body: issue.body.split("## Labels")[0],
       labels: issue.labels.map(label => label.name),
-      created_at: issue.created_at,
-      updated_at: issue.updated_at,
+      created_at: new Date(issue.created_at).getTime(),
+      updated_at: new Date(issue.updated_at).getTime(),
       state: issue.state,
       open: issue.state === "open",
       title,

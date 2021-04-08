@@ -1,0 +1,12 @@
+name: fetch-job-cron
+on:
+  schedule:
+    - cron: '0 * * * *'
+jobs:
+  cron:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call our API route
+        run: |
+          curl --request POST \
+          --url 'https://yoursite.com/api/jobs/cron' \

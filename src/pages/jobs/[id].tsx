@@ -1,18 +1,20 @@
 import { Container, Heading, IconButton, Stack, Tag } from "@chakra-ui/react"
 import Layout from "components/Layout"
 import Markdown from "components/Markdown"
-import { fetchJobs, ProcessedJob } from "lib/jobs/fetchFromGithub"
 import { GetServerSideProps } from "next"
 import { useRouter } from "next/router"
 import Head from "next/head"
 import { IoMdArrowRoundBack } from "react-icons/io"
+import showJob from "lib/jobs/services/showJob"
+import { Job } from "lib/jobs/model"
 
 interface Props {
-  job: ProcessedJob
+  job: Job
 }
 
 const JobDetails: React.FC<Props> = ({ job }) => {
   const router = useRouter()
+  console.log(job)
 
   return (
     <Layout
@@ -20,8 +22,8 @@ const JobDetails: React.FC<Props> = ({ job }) => {
         <Container maxW="container.lg" centerContent mt={5}>
           <Heading size="2xl">{job.title}</Heading>
           <Stack isInline spacing={1} mt={6}>
-            {job.labels.map(label => (
-              <Tag key={label} variant="solid" colorScheme="blackAlpha">
+            {job.labels && job.labels.map(label => (
+              <Tag key={label} variant="solid" colorScheme="green">
                 {label}
               </Tag>
             ))}
@@ -45,14 +47,11 @@ const JobDetails: React.FC<Props> = ({ job }) => {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const jobs = await fetchJobs({ 
-    since: new Date("2021/04/02"),
-  })
-  const job = jobs.find(job => job.github_id === Number(query.id))
+  const { job } = await showJob({ id: query.id as string })
 
   return {
     props: {
-      job
+      job: JSON.parse(JSON.stringify(job))
     }
   }
 }
