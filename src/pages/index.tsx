@@ -29,9 +29,9 @@ const Home: React.FC<Props> = ({ jobs, hasNextPage, nextPage }) => {
   return (
     <Layout
       jumbotron={
-        <Container maxW="container.md" textAlign="center" my={5}>
-          <Heading size="3xl">Bem vindo ao DevHunter</Heading>
-          <Text fontSize="x-large" mt={5}>
+        <Container maxW="container.lg" textAlign="center" my={5}>
+          <Heading fontSize={["5xl", "6xl"]}>Bem vindo ao DevHunter</Heading>
+          <Text fontSize={["x-large", "xx-large"]} mt={5} color="gray.200">
             Descubra diversas vagas de emprego exclusivas para desenvolvedores.
           </Text>
         </Container>

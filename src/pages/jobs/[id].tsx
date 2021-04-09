@@ -1,4 +1,4 @@
-import { Container, Heading, IconButton, Stack, Tag } from "@chakra-ui/react"
+import { Box, Container, Heading, IconButton, Stack, Tag } from "@chakra-ui/react"
 import Layout from "components/Layout"
 import Markdown from "components/Markdown"
 import { GetServerSideProps } from "next"
@@ -14,20 +14,25 @@ interface Props {
 
 const JobDetails: React.FC<Props> = ({ job }) => {
   const router = useRouter()
-  console.log(job)
 
   return (
     <Layout
       jumbotron={
         <Container maxW="container.lg" centerContent mt={5}>
-          <Heading size="2xl">{job.title}</Heading>
-          <Stack isInline spacing={1} mt={6}>
+          <Heading size="3xl">{job.title}</Heading>
+          <Box spacing={1} mt={6}>
             {job.labels && job.labels.map(label => (
-              <Tag key={label} variant="solid" colorScheme="green">
+              <Tag 
+                key={label} 
+                variant="solid" 
+                colorScheme="green"
+                mr={1} 
+                mb={1}
+              >
                 {label}
               </Tag>
             ))}
-          </Stack>
+          </Box>
         </Container>
       }
     >

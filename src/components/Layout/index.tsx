@@ -1,5 +1,6 @@
-import { Stack, Container, Box, Heading, Text, Input, Button } from "@chakra-ui/react"
+import { Stack, Container, Box, Heading, Text, Input, Button, Flex } from "@chakra-ui/react"
 import { ReactNode } from "react"
+import NextLink from "next/link"
 
 interface Props {
   jumbotron?: ReactNode
@@ -7,40 +8,47 @@ interface Props {
 
 const Layout: React.FC<Props> = ({ children, jumbotron }) => {
   return (
-    <>
-      <Box p={5} bg="gray.200">
+    <Box bg="whiteAlpha.100">
+      <Box p={5} bg="white" as="header">
         <Container maxW="container.xl">
           <Stack justifyContent="space-between" flexDirection="row">
-            <Heading>DevHunter</Heading>
+            <NextLink href="/">
+              <Heading>DevHunter</Heading>
+            </NextLink>
             <Text>Sobre</Text>
           </Stack>
-          {jumbotron}
         </Container>
       </Box>
-      <Box 
-        w="100%" 
-        bgGradient="linear(to-r,gray.400,yellow.400,pink.400, red.400, blue.400, green.400)" 
-        p={2}
-      />
+      <Box p={6} bg="gray.900" color="white">
+        {jumbotron}
+      </Box>
       <Box as="main">
         {children}
       </Box>
-      <Box as="footer" bg="gray.900" p={5} color="white">
+      <Box as="footer" bg="gray.600" p={5} color="white">
         <Container maxW="container.lg">
-          <Stack isInline alignItems="center" mx="auto" w="full" maxW="container.md">
+          <Flex 
+            justifyContent="space-between" 
+            alignItems="center" 
+            flexWrap="wrap"
+            mx="auto" w="full" 
+            maxW="container.md"
+          >
             <Text>Receba atualizações sobre vagas semanalmente:</Text>
-            <Input 
-              size="sm"
-              maxW={300}
-              placeholder="Seu e-mail"
-            />
-            <Button size="sm" rounded="none" color="black">
-              Inscrever
-            </Button>
-          </Stack>
+            <Stack isInline as="fieldset" w="full" maxW="sm">
+              <Input 
+                size="sm"
+                maxW={300}
+                placeholder="Seu e-mail"
+              />
+              <Button size="sm" rounded="none" color="black">
+                Inscrever
+              </Button>
+            </Stack>
+          </Flex>
         </Container>
       </Box>
-    </>
+    </Box>
   )
 }
 
