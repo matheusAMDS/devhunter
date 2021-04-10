@@ -53,7 +53,7 @@ export async function fetchJobs({ since }: FetchJobsParams) {
 }
 
 function convertIssueToJob(issue: RawIssue): ProcessedJob | null {
-  const companyRegex = RegExp(/@\s*(.+)|na (.+)|no (.+)/)
+  const companyRegex = RegExp(/@\s*(.+)|na (.+)/)
   const locationRegex = RegExp(/\[(.+)\]\s/)
 
   const companyResult = issue.title.match(companyRegex)
@@ -75,7 +75,7 @@ function convertIssueToJob(issue: RawIssue): ProcessedJob | null {
       state: issue.state,
       open: issue.state === "open",
       title,
-      company: companyResult[1] || companyResult[2] || companyResult[3] || null,
+      company: companyResult[1] || companyResult[2] || null,
       location: locationResult[1] || null
     }
   } else {
