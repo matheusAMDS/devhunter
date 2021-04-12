@@ -1,11 +1,19 @@
 import dbConnect from "lib/mongodb"
-import { JobModel } from "lib/jobs/model"
+import { Job, JobModel } from "lib/jobs/model"
 
 interface IndexJobsParams {
   page?: number
+  label?: string
+  location?: string
 }
 
-async function indexJobs({ page=0 }: IndexJobsParams) {
+export interface IndexJobsResult {
+  jobs: Job[]
+  hasNextPage: boolean 
+  nextPage: number
+}
+
+export async function indexJobs({ page=0, label, location }: IndexJobsParams) {
   await dbConnect()
 
   const JOB_PER_PAGE = 15
@@ -13,10 +21,26 @@ async function indexJobs({ page=0 }: IndexJobsParams) {
   const skippableDocs = JOB_PER_PAGE * page 
   const fields = 
     ["title", "created_at", "updated_at", "company", "location", "labels"]
-    
-  const total = await JobModel.countDocuments()
+
+  let query: Object = {
+    open: true
+  }
+
+  if (label)
+    query = {
+      ...query,
+      labels: label
+    }
+
+  if (location) 
+    query = {
+      ...query,
+      location
+    }
+   
+  const total = await JobModel.find(query).estimatedDocumentCount()
   const jobs = await JobModel
-    .find({ open: true }, fields)
+    .find(query, fields)
     .sort({ updated_at: -1 })
     .skip(skippableDocs)
     .limit(JOB_PER_PAGE)
@@ -24,8 +48,6 @@ async function indexJobs({ page=0 }: IndexJobsParams) {
   return {
     jobs,
     hasNextPage: skippableDocs < total,
-    nextPage: skippableDocs < total ? null : page + 1
+    nextPage: skippableDocs < total ? page + 1 : null
   }
 }
-
-export default indexJobs
