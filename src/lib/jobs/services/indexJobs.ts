@@ -18,7 +18,6 @@ export async function indexJobs({ page=0, label, location }: IndexJobsParams) {
 
   const JOB_PER_PAGE = 15
 
-  const skippableDocs = JOB_PER_PAGE * page 
   const fields = 
     ["title", "created_at", "updated_at", "company", "location", "labels"]
 
@@ -38,16 +37,16 @@ export async function indexJobs({ page=0, label, location }: IndexJobsParams) {
       location
     }
    
-  const total = await JobModel.find(query).estimatedDocumentCount()
+  const total = await JobModel.find(query).countDocuments()
   const jobs = await JobModel
     .find(query, fields)
     .sort({ updated_at: -1 })
-    .skip(skippableDocs)
+    .skip(JOB_PER_PAGE * page)
     .limit(JOB_PER_PAGE)
-
+  
   return {
     jobs,
-    hasNextPage: skippableDocs < total,
-    nextPage: skippableDocs < total ? page + 1 : null
+    hasNextPage: jobs.length < total,
+    nextPage: jobs.length < total ? page + 1 : null
   }
 }

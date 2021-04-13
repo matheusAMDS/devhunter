@@ -8,7 +8,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const location = req.query.location as string 
 
   const data = await indexJobs({ 
-    page,
+    page: page || 0,
     label,
     location
   })
