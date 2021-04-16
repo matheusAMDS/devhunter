@@ -1,7 +1,8 @@
-import useSWR from "swr"
+import { useSWRInfinite } from "swr"
 import axios from "axios"
 
 import { IndexJobsResult } from "lib/jobs/services/indexJobs"
+import { Job } from "./model"
 import { useEffect, useState } from "react"
 
 interface UseJobsParams {
@@ -12,33 +13,45 @@ interface UseJobsParams {
 
 export default function useJobs(params: UseJobsParams) {
   const { initialData, label, location } = params
-  const { hasNextPage, jobs, nextPage } = initialData
+  const [ jobs, setJobs ] = useState<Job[]>([] as Job[])
 
-  const { data, error } = useSWR(
-    ["jobs", label, location], 
-    async () => {
-      const response = await axios.get<IndexJobsResult>("/api/jobs", {
-        params: {
-          label,
-          location
-        }
-      })
+  const getKey = (index: number, prevData: IndexJobsResult) => {
+    if (prevData && !prevData.hasNextPage) 
+      return null 
 
-      return response.data
-    }, 
-    { 
-      initialData: {
-        jobs,
-        hasNextPage,
-        nextPage
-      }
-    }
-  )
+    let url = `/api/jobs?page=${index}`
+    
+    if (label)
+      url += `&label=${label}`
+
+    if (location)
+      url += `&location=${location}`
+
+    return url
+  }
+
+  const fetcher = async (url: string) => {
+    const response = await axios.get<IndexJobsResult>(url)
+
+    return response.data
+  }
+
+  const { data, error, size, setSize } = useSWRInfinite<IndexJobsResult>(getKey, fetcher, {
+    initialData: [initialData]
+  })
+
+  useEffect(() => {
+    setJobs(data.reduce((prev, result) => prev.concat(result.jobs), []))
+  }, [data])
 
   return {
-    data,
+    jobs,
     loading: !data && !error,
-    error
+    error,
+    hasMore: data[data.length - 1].hasNextPage,
+    loadMore: () => {
+      setSize(size + 1)
+    }
   }
 }
 

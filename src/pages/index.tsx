@@ -29,7 +29,7 @@ interface FilterJobs {
 const Home: React.FC<Props> = ({ label, location, ...initialData }) => {
   const router = useRouter()
   const { register, handleSubmit } = useForm<FilterJobs>()
-  const { data, error } = useJobs({
+  const { jobs, loadMore, hasMore, error } = useJobs({
     location,
     label,
     initialData
@@ -110,7 +110,7 @@ const Home: React.FC<Props> = ({ label, location, ...initialData }) => {
           <Heading>Erro ao carregar as vagas</Heading>
         ) : (
           <>
-            { data.jobs.map(job => (
+            { jobs.map(job => (
               <NextLink 
                 href="/jobs/[id]" 
                 as={`/jobs/${job._id}`} 
@@ -147,6 +147,13 @@ const Home: React.FC<Props> = ({ label, location, ...initialData }) => {
             ))}
           </>
         )}
+        <Button
+          colorScheme="green"
+          visibility={hasMore ? "visible" : "hidden"}
+          onClick={loadMore}
+        >
+          Carregar Mais 
+        </Button>
       </Container>
     </Layout>
   )
