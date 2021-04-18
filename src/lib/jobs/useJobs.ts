@@ -14,6 +14,7 @@ interface UseJobsParams {
 export default function useJobs(params: UseJobsParams) {
   const { initialData, label, location } = params
   const [ jobs, setJobs ] = useState<Job[]>([] as Job[])
+  const [ hasMore, setHasMore ] = useState(true)
 
   const getKey = (index: number, prevData: IndexJobsResult) => {
     if (prevData && !prevData.hasNextPage) 
@@ -42,13 +43,14 @@ export default function useJobs(params: UseJobsParams) {
 
   useEffect(() => {
     setJobs(data.reduce((prev, result) => prev.concat(result.jobs), []))
+    setHasMore(data[data.length - 1].hasNextPage)
   }, [data])
 
   return {
     jobs,
     loading: !data && !error,
     error,
-    hasMore: data[data.length - 1].hasNextPage,
+    hasMore,
     loadMore: () => {
       setSize(size + 1)
     }

@@ -43,10 +43,12 @@ export async function indexJobs({ page=0, label, location }: IndexJobsParams) {
     .sort({ updated_at: -1 })
     .skip(JOB_PER_PAGE * page)
     .limit(JOB_PER_PAGE)
+
+  const totalJobsLoaded = jobs.length + JOB_PER_PAGE * page
   
   return {
     jobs,
-    hasNextPage: jobs.length < total,
-    nextPage: jobs.length < total ? page + 1 : null
+    hasNextPage: totalJobsLoaded < total,
+    nextPage: totalJobsLoaded < total ? page + 1 : null
   }
 }
