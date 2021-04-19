@@ -120,7 +120,7 @@ const Home: React.FC<Props> = ({ label, location, ...initialData }) => {
                   <Text color="gray.500">
                     {postedDate(job.updated_at)}
                   </Text>
-                  <Heading mb={1}>{job.title}</Heading>
+                  <Heading mb={1} size="lg">{job.title}</Heading>
                   <Text as="p" fontSize={18} mb={1}>
                     Postada por <strong>{job.company}</strong>
                   </Text>

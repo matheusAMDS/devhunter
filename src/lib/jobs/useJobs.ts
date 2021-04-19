@@ -13,7 +13,7 @@ interface UseJobsParams {
 
 export default function useJobs(params: UseJobsParams) {
   const { initialData, label, location } = params
-  const [ jobs, setJobs ] = useState<Job[]>([] as Job[])
+  const [ jobs, setJobs ] = useState<Job[]>(initialData.jobs || [])
   const [ hasMore, setHasMore ] = useState(true)
 
   const getKey = (index: number, prevData: IndexJobsResult) => {

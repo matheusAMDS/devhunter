@@ -1,4 +1,4 @@
-import { Stack, Container, Box, Heading, Text, Input, Button, Flex } from "@chakra-ui/react"
+import { Stack, Container, Box, Heading, Text, Input, Button, Flex, Link } from "@chakra-ui/react"
 import { ReactNode } from "react"
 import NextLink from "next/link"
 
@@ -13,9 +13,13 @@ const Layout: React.FC<Props> = ({ children, jumbotron }) => {
         <Container maxW="container.xl">
           <Stack justifyContent="space-between" flexDirection="row">
             <NextLink href="/">
-              <Heading>DevHunter</Heading>
+              <Heading cursor="pointer">DevHunter</Heading>
             </NextLink>
-            <Text>Sobre</Text>
+            <NextLink href="/about">
+              <Link fontWeight="semibold" fontSize={18} color="black">
+                Sobre
+              </Link>
+            </NextLink>
           </Stack>
         </Container>
       </Box>
