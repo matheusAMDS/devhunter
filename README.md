@@ -1,30 +1,60 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# DevHunter
 
-## Getting Started
+DevHunter é um web app que agrega vagas exclusivas para desenvolvedores. 
+Você pode acessa-lo [aqui](https://devhunter.vercel.app)
 
-First, run the development server:
 
-```bash
+Tabela de conteúdos
+=================
+<!--ts-->
+  * [Sobre](#devhunter)
+  * [Tabela de Conteudo](#tabela-de-conteúdos)
+  * [Tecnologias](#tecnologias)
+  * [Instalação](#instalação)
+  * [Como usar](#como-usar)
+<!--te-->
+
+## Tecnologias
+
+  * [NodeJS](https://nodejs.org/)
+  * [ReactJS](https://reactjs.org/)
+  * [NextJS](https://nextjs.org/)
+  * [MongoDB](https://www.mongodb.com/)
+  * [Chakra-UI](https://chakra-ui.com/)
+  * [Github Actions](https://github.com/features/actions)
+
+## Instalação
+
+```
+git clone https://github.com/matheusAMDS/devhunter.git
+```
+```
+cd devhunter
+```
+```
+npm install
+# ou
+yarn
+```
+
+## Como usar
+
+Primeiramente, adicione um arquivo .env.local na raiz do projeto com os seguintes dados:
+
+```
+MONGODB_URI=<SUA_URI_DO_MONGODB>
+```
+
+Depois, inicie o servidor local:
+
+```
 npm run dev
-# or
+# ou
 yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abra [http://localhost:3000](http://localhost:3000) no seu browser.
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/import?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Como o NextJS não possui um recurso nativo para iniciar o cron job, cabe à escolha
+do desenvolvedor de como fazer a requisição da rota `/api/jobs/cron` para adquirir e salvar 
+as vagas.
