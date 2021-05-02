@@ -7,27 +7,27 @@ interface FetchJobsParams {
 }
 
 interface RawIssue {
-  title: string 
-  id: number 
+  title: string
+  id: number
   body: string
-  created_at: Date 
+  created_at: Date
   updated_at: Date
-  state: string 
-  labels: { 
-    name: string 
+  state: string
+  labels: {
+    name: string
   }[]
 }
 
 export interface ProcessedJob {
-  title: string 
-  github_id: number 
+  title: string
+  github_id: number
   body: string
-  created_at: number  
+  created_at: number
   updated_at: number
-  state: string 
+  state: string
   labels: string[]
-  open: boolean 
-  company: string 
+  open: boolean
+  company: string
   location: string
 }
 
@@ -35,7 +35,7 @@ export async function fetchJobs({ since }: FetchJobsParams) {
   const calls = GITHUB_JOB_REPOS.map(({ org, repo }) => {
     const url = GITHUB_API_URL + `/repos/${org}/${repo}/issues`
 
-    return axios.get<RawIssue[]>(url, {
+    return axios.get<RawIssue[]>(url, since && {
       params: {
         since: new Date(since).toISOString()
       }
@@ -49,7 +49,7 @@ export async function fetchJobs({ since }: FetchJobsParams) {
     .map(issue => convertIssueToJob(issue))
     .filter(issue => issue)
 
-	return jobs
+  return jobs
 }
 
 function convertIssueToJob(issue: RawIssue): ProcessedJob | null {
@@ -59,7 +59,7 @@ function convertIssueToJob(issue: RawIssue): ProcessedJob | null {
   const companyResult = issue.title.match(companyRegex)
 
   const locationResult = issue.title.match(locationRegex)
- 
+
   if (companyResult && locationResult) {
     const title = issue.title
       .replace(companyRegex, "")
@@ -81,5 +81,4 @@ function convertIssueToJob(issue: RawIssue): ProcessedJob | null {
   } else {
     return null
   }
-  
 }
