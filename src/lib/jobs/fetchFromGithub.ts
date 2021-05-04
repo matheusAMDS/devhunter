@@ -29,6 +29,8 @@ export interface ProcessedJob {
   open: boolean
   company: string
   location: string
+  workRegimes: string[]
+  seniority: string[]
 }
 
 export async function fetchJobs({ since }: FetchJobsParams) {
@@ -60,6 +62,24 @@ function convertIssueToJob(issue: RawIssue): ProcessedJob | null {
 
   const locationResult = issue.title.match(locationRegex)
 
+  const WORK_REGIMES = ["JUNIOR", "JÚNIOR", "PLENO", "SENIOR", "SÊNIOR"]
+  const USELESS_LABELS = ["REMOTO", "PRESENCIAL", "ESPECIALISTA", "ALOCADO"]
+
+  let workRegimes: string[] = []
+  let seniority: string[] = []
+  let labels: string[] = []
+
+  issue.labels.forEach(({ name: label }) => {
+    const upcLabel = label.toUpperCase()
+
+    if (upcLabel === "CLT" || upcLabel === "PJ")
+      workRegimes.push(label)
+    else if (WORK_REGIMES.includes(upcLabel))
+      seniority.push(label)
+    else if (!USELESS_LABELS.includes(upcLabel))
+      labels.push(label)
+  })
+
   if (companyResult && locationResult) {
     const title = issue.title
       .replace(companyRegex, "")
@@ -67,14 +87,16 @@ function convertIssueToJob(issue: RawIssue): ProcessedJob | null {
       .trim()
 
     return {
+      title,
+      labels,
+      workRegimes,
+      seniority,
       github_id: issue.id,
-      body: issue.body.split("## Labels")[0],
-      labels: issue.labels.map(label => label.name),
-      created_at: new Date(issue.created_at).getTime(),
-      updated_at: new Date(issue.updated_at).getTime(),
       state: issue.state,
       open: issue.state === "open",
-      title,
+      body: issue.body.split("## Labels")[0],
+      created_at: new Date(issue.created_at).getTime(),
+      updated_at: new Date(issue.updated_at).getTime(),
       company: companyResult[1] || companyResult[2] || null,
       location: locationResult[1] || null
     }
