@@ -13,6 +13,7 @@
     "@emotion/styled": "11",
     "@typegoose/typegoose": "^7.6.0",
     "axios": "^0.21.1",
+    "babel-plugin-transform-typescript-metadata": "^0.3.2",
     "chakra-ui-markdown-renderer": "^1.1.0",
     "date-fns": "^2.19.0",
     "framer-motion": "4",
