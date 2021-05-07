@@ -6,10 +6,10 @@ import { useRouter } from "next/router"
 import Head from "next/head"
 import { IoMdArrowRoundBack } from "react-icons/io"
 import showJob from "lib/jobs/services/showJob"
-import { Job } from "lib/jobs/model"
+import { IJob } from "lib/jobs/model"
 
 interface Props {
-  job: Job
+  job: IJob
 }
 
 const JobDetails: React.FC<Props> = ({ job }) => {
@@ -22,11 +22,11 @@ const JobDetails: React.FC<Props> = ({ job }) => {
           <Heading size="3xl">{job.title}</Heading>
           <Box spacing={1} mt={6}>
             {job.labels && job.labels.map(label => (
-              <Tag 
-                key={label} 
-                variant="solid" 
+              <Tag
+                key={label}
+                variant="solid"
                 colorScheme="green"
-                mr={1} 
+                mr={1}
                 mb={1}
               >
                 {label}
@@ -40,10 +40,10 @@ const JobDetails: React.FC<Props> = ({ job }) => {
         <title>{job.title} | DevHunter</title>
       </Head>
       <Container maxW="container.lg" py={8}>
-        <IconButton 
+        <IconButton
           aria-label="go-back"
-          icon={<IoMdArrowRoundBack />} 
-          onClick={() => router.back()} 
+          icon={<IoMdArrowRoundBack />}
+          onClick={() => router.back()}
         />
         <Markdown src={job.body} />
       </Container>

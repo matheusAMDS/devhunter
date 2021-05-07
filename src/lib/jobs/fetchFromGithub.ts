@@ -22,14 +22,14 @@ export interface ProcessedJob {
   title: string
   github_id: number
   body: string
-  created_at: number
-  updated_at: number
   state: string
   labels: string[]
   open: boolean
   company: string
   location: string
-  workRegimes: string[]
+  createdAt: number
+  updatedAt: number
+  work_regimes: string[]
   seniority: string[]
 }
 
@@ -89,14 +89,14 @@ function convertIssueToJob(issue: RawIssue): ProcessedJob | null {
     return {
       title,
       labels,
-      workRegimes,
       seniority,
+      createdAt: new Date(issue.created_at).getTime(),
+      updatedAt: new Date(issue.updated_at).getTime(),
+      work_regimes: workRegimes,
       github_id: issue.id,
       state: issue.state,
       open: issue.state === "open",
       body: issue.body.split("## Labels")[0],
-      created_at: new Date(issue.created_at).getTime(),
-      updated_at: new Date(issue.updated_at).getTime(),
       company: companyResult[1] || companyResult[2] || null,
       location: locationResult[1] || null
     }

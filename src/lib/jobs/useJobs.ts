@@ -2,26 +2,26 @@ import { useSWRInfinite } from "swr"
 import axios from "axios"
 
 import { IndexJobsResult } from "lib/jobs/services/indexJobs"
-import { Job } from "./model"
+import { IJob } from "./model"
 import { useEffect, useState } from "react"
 
 interface UseJobsParams {
-  label?: string 
+  label?: string
   location?: string
   initialData?: IndexJobsResult
 }
 
 export default function useJobs(params: UseJobsParams) {
   const { initialData, label, location } = params
-  const [ jobs, setJobs ] = useState<Job[]>(initialData.jobs || [])
-  const [ hasMore, setHasMore ] = useState(true)
+  const [jobs, setJobs] = useState<IJob[]>(initialData.jobs || [])
+  const [hasMore, setHasMore] = useState(true)
 
   const getKey = (index: number, prevData: IndexJobsResult) => {
-    if (prevData && !prevData.hasNextPage) 
-      return null 
+    if (prevData && !prevData.hasNextPage)
+      return null
 
     let url = `/api/jobs?page=${index}`
-    
+
     if (label)
       url += `&label=${label}`
 

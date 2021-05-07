@@ -12,7 +12,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     .limit(1))[0]
 
   const jobs = mostRecentJob
-    ? await fetchJobs({ since: mostRecentJob.created_at })
+    ? await fetchJobs({ since: mostRecentJob.createdAt.getTime() })
     : await fetchJobs({})
 
   await JobModel.insertMany(jobs)

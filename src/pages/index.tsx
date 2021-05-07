@@ -10,13 +10,13 @@ import { useForm } from 'react-hook-form'
 
 import Layout from "components/Layout"
 import { indexJobs } from 'lib/jobs/services/indexJobs'
-import { Job } from "lib/jobs/model"
+import { IJob } from "lib/jobs/model"
 import useJobs from "lib/jobs/useJobs"
 
 interface Props {
   label?: string
   location?: string
-  jobs: Job[],
+  jobs: IJob[],
   hasNextPage: boolean,
   nextPage: number
 }
@@ -35,8 +35,8 @@ const Home: React.FC<Props> = ({ label, location, ...initialData }) => {
     initialData
   })
 
-  const postedDate = (date: number) => {
-    const distance = formatDistanceToNow(new Date(date), { 
+  const postedDate = (date: Date) => {
+    const distance = formatDistanceToNow(new Date(date), {
       locale: brLocale,
       addSuffix: false
     })
@@ -44,18 +44,18 @@ const Home: React.FC<Props> = ({ label, location, ...initialData }) => {
     return "Há " + distance + " atrás"
   }
 
-  const handleFilter = handleSubmit(data => { 
+  const handleFilter = handleSubmit(data => {
     if (data.label || data.location) {
       let url = "/?"
 
       if (data.label)
-        url += "label=" + data.label 
+        url += "label=" + data.label
 
       if (data.location)
         url += "&location=" + data.location
 
       router.push(url)
-    }   
+    }
   })
 
   return (
@@ -66,33 +66,33 @@ const Home: React.FC<Props> = ({ label, location, ...initialData }) => {
           <Text fontSize={["x-large", "xx-large"]} mt={5} color="gray.200">
             Descubra diversas vagas de emprego exclusivas para desenvolvedores.
           </Text>
-          <Flex 
+          <Flex
             as="form"
             onSubmit={handleFilter}
-            mb={5} mt={10} mx="auto" 
+            mb={5} mt={10} mx="auto"
             w="full" maxW={650}
             justifyContent="space-around"
             flexWrap="wrap"
           >
-            <Input 
-              placeholder="Skill ou outra tag" 
+            <Input
+              placeholder="Skill ou outra tag"
               bg="gray.100"
               color="black"
               my={1}
               w="full" maxW={["full", "full", 64]}
               {...register("label")}
             />
-            <Input 
-              placeholder="Localização" 
+            <Input
+              placeholder="Localização"
               bg="gray.100"
               color="black"
               my={1}
               w="full" maxW={["full", "full", 64]}
               {...register("location")}
             />
-            <Button 
-              colorScheme="green" 
-              my={1} w="full" 
+            <Button
+              colorScheme="green"
+              my={1} w="full"
               maxW={["full", 'full', 24]}
               type="submit"
             >
@@ -106,19 +106,19 @@ const Home: React.FC<Props> = ({ label, location, ...initialData }) => {
         <title>Home | DevHunter</title>
       </Head>
       <Container maxW="container.lg" py={5}>
-        { error ? (
+        {error ? (
           <Heading>Erro ao carregar as vagas</Heading>
         ) : (
           <>
-            { jobs.map(job => (
-              <NextLink 
-                href="/jobs/[id]" 
-                as={`/jobs/${job._id}`} 
+            {jobs.map(job => (
+              <NextLink
+                href="/jobs/[id]"
+                as={`/jobs/${job._id}`}
                 key={String(job._id)}
               >
                 <Box p={2} cursor="pointer" my={2}>
                   <Text color="gray.500">
-                    {postedDate(job.updated_at)}
+                    {postedDate(job.updatedAt)}
                   </Text>
                   <Heading mb={1} size="lg">{job.title}</Heading>
                   <Text as="p" fontSize={18} mb={1}>
@@ -130,11 +130,11 @@ const Home: React.FC<Props> = ({ label, location, ...initialData }) => {
                   </Stack>
                   <Box mt={3}>
                     {job.labels.map(label => (
-                      <Tag 
-                        mr={1} 
-                        mb={1} 
-                        key={label} 
-                        variant="solid" 
+                      <Tag
+                        mr={1}
+                        mb={1}
+                        key={label}
+                        variant="solid"
                         colorScheme="green"
                       >
                         {label}
@@ -152,7 +152,7 @@ const Home: React.FC<Props> = ({ label, location, ...initialData }) => {
           visibility={hasMore ? "visible" : "hidden"}
           onClick={loadMore}
         >
-          Carregar Mais 
+          Carregar Mais
         </Button>
       </Container>
     </Layout>
