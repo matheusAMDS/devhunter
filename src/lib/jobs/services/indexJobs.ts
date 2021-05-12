@@ -19,7 +19,7 @@ export async function indexJobs({ page = 0, label, location }: IndexJobsParams) 
   const JOB_PER_PAGE = 15
 
   const fields =
-    ["title", "createdAt", "updatedAt", "company", "location", "labels"]
+    ["title", "createdAt", "updatedAt", "company", "location", "labels", "work_regimes", "seniority"]
 
   let query: Object = {
     open: true

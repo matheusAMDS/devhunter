@@ -1,8 +1,5 @@
 import Head from 'next/head'
-import { Box, Button, Container, Divider, Flex, Heading, Input, Stack, Tag, Text } from "@chakra-ui/react"
-import { formatDistanceToNow } from "date-fns"
-import brLocale from "date-fns/locale/pt-BR"
-import { MdLocationCity } from "react-icons/md"
+import { Button, Container, Flex, Heading, Input, Text } from "@chakra-ui/react"
 import NextLink from "next/link"
 import { GetServerSideProps } from 'next'
 import { useRouter } from "next/router"
@@ -12,6 +9,7 @@ import Layout from "components/Layout"
 import { indexJobs } from 'lib/jobs/services/indexJobs'
 import { IJob } from "lib/jobs/model"
 import useJobs from "lib/jobs/useJobs"
+import JobItem from 'components/Job/JobItem'
 
 interface Props {
   label?: string
@@ -34,15 +32,6 @@ const Home: React.FC<Props> = ({ label, location, ...initialData }) => {
     label,
     initialData
   })
-
-  const postedDate = (date: Date) => {
-    const distance = formatDistanceToNow(new Date(date), {
-      locale: brLocale,
-      addSuffix: false
-    })
-
-    return "Há " + distance + " atrás"
-  }
 
   const handleFilter = handleSubmit(data => {
     if (data.label || data.location) {
@@ -116,33 +105,7 @@ const Home: React.FC<Props> = ({ label, location, ...initialData }) => {
                 as={`/jobs/${job._id}`}
                 key={String(job._id)}
               >
-                <Box p={2} cursor="pointer" my={2}>
-                  <Text color="gray.500">
-                    {postedDate(job.updatedAt)}
-                  </Text>
-                  <Heading mb={1} size="lg">{job.title}</Heading>
-                  <Text as="p" fontSize={18} mb={1}>
-                    Postada por <strong>{job.company}</strong>
-                  </Text>
-                  <Stack isInline alignItems="center">
-                    <MdLocationCity />
-                    <Text>{job.location}</Text>
-                  </Stack>
-                  <Box mt={3}>
-                    {job.labels.map(label => (
-                      <Tag
-                        mr={1}
-                        mb={1}
-                        key={label}
-                        variant="solid"
-                        colorScheme="green"
-                      >
-                        {label}
-                      </Tag>
-                    ))}
-                  </Box>
-                  <Divider mt={5} />
-                </Box>
+                <JobItem job={job} />
               </NextLink>
             ))}
           </>
