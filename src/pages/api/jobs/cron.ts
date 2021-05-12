@@ -8,7 +8,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect()
 
   const mostRecentJob = (await JobModel.find()
-    .sort({ created_at: -1 })
+    .sort({ createdAt: -1 })
     .limit(1))[0]
 
   const jobs = mostRecentJob
